@@ -7,8 +7,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-from dataset import BratsDataset
-from model import UNet
+from preprocess import BratsDataset
 
 configure_mlflow()
 

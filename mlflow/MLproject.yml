@@ -1,0 +1,11 @@
+name: brats2020-segmentation
+
+docker_env:
+  image: brats:latest
+  build_context: .
+
+entry_points:
+  data-preprocessing:
+    command: "python preprocess.py"
+  model-training:
+    command: "python model_training.py"

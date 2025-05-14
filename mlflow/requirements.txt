@@ -1,14 +1,2 @@
+scikit-learn
 mlflow
-tensorflow==2.8.0
-keras==2.8.0
-keras_applications==1.0.8
-classification_models_3D==1.0.8
-segmentation_models_3D
-protobuf==3.20.*
-matplotlib~=3.8.4
-numpy~=1.24.3
-pandas~=2.2.1
-trimesh~=4.2.4
-scikit-image~=0.22.0
-nibabel~=5.2.1
-scikit-learn~=1.4.1.post1

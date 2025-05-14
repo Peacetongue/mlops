@@ -1,11 +1,10 @@
-name: brats2020-segmentation
+name: simple_example
 
 docker_env:
-  image: brats:latest
-  build_context: .
+  image: simple-mlflow-image
 
 entry_points:
-  data-preprocessing:
-    command: "python preprocess.py"
-  model-training:
-    command: "python model_training.py"
+  main:
+    parameters:
+      alpha: {type: float, default: 0.5}
+    command: "python train.py --alpha {alpha}"

@@ -1,6 +1,5 @@
 import mlflow
 import mlflow.pytorch
-from mlflow_setup import configure_mlflow
 
 import torch
 import torch.nn as nn

@@ -4,3 +4,8 @@ entry_points:
   base:
     command: "python base.py"
   first:
+    command: "python first.py"
+  second:
+    command: "python second.py"
+  third:
+    command: "python third.py"

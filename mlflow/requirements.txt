@@ -14,3 +14,4 @@ keras_applications==1.0.8
 classification_models_3D==1.0.8
 segmentation_models_3D
 protobuf==3.20.*
+catboost

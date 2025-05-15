@@ -12,9 +12,9 @@ os.environ['MLFLOW_S3_ENDPOINT_URL'] = os.getenv('MLFLOW_S3_ENDPOINT_URL')
 
 mlflow.run(
     uri='.',
-    entry_point='data-preprocessing',
+    entry_point='third',
     env_manager='local',
     experiment_name='Titanic_Survival_Prediction',
-    run_name='Data_Preprocessing',
+    run_name='CatBoost_Model',
     parameters='',
 )

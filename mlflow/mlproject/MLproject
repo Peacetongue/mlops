@@ -9,3 +9,11 @@ entry_points:
     command: "python second.py"
   third:
     command: "python third.py"
+  neuro:
+    command: "python neuron.py"
+  neuro_first:
+    command: "python neuro_first.py"
+  neuro_second:
+    command: "python neuro_second.py"
+  neuro_third:
+    command: "python neuro_third.py"

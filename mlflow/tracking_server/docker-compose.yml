@@ -47,8 +47,8 @@ services:
     command: >
       mlflow server
         --backend-store-uri postgresql://mlflow:password@postgres:5432/mlflow
-        --default-artifact-root s3://mlflow/
-        --artifacts-destination s3://mlflow/
+        --default-artifact-root s3://mlflow/mlruns
+        --artifacts-destination s3://mlflow/mlruns
         --host 0.0.0.0
     depends_on:
       - s3

@@ -1,0 +1,20 @@
+import os
+from dotenv import load_dotenv
+import mlflow
+
+load_dotenv()
+
+os.environ['AWS_ACCESS_KEY_ID'] = os.getenv('AWS_ACCESS_KEY_ID')
+os.environ['AWS_SECRET_ACCESS_KEY'] = os.getenv('AWS_SECRET_ACCESS_KEY')
+os.environ['MLFLOW_TRACKING_URI'] = os.getenv('MLFLOW_TRACKING_URI')
+os.environ['MLFLOW_S3_ENDPOINT_URL'] = os.getenv('MLFLOW_S3_ENDPOINT_URL')
+
+
+mlflow.run(
+    uri='.',
+    entry_point='data-preprocessing',
+    env_manager='local',
+    experiment_name='Titanic_Survival_Prediction',
+    run_name='Data_Preprocessing',
+    parameters='',
+)

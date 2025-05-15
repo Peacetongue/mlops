@@ -1,9 +1,6 @@
 name: mlflow-simple-example
 
-conda_env: conda.yaml
-
 entry_points:
-  data-preprocessing:
-    parameters:
-      test-size: {type: float, default: 0.33}
-    command: "python train.py --test-size {test-size}"
+  base:
+    command: "python base.py"
+  first:

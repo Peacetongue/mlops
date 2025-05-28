@@ -1,0 +1,12 @@
+service: "service:svc"
+labels:
+  owner: "Egor"
+  project: "summarization"
+include:
+  - "service.py"
+  - "save_model.py"
+python:
+  packages:
+    - transformers
+    - torch
+    - bentoml

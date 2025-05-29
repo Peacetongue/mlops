@@ -1,0 +1,12 @@
+service: "service:SummarizationService"
+labels:
+  owner: your-name
+  project: summarization
+include:
+  - "*.py"
+python:
+  packages:
+    - torch
+    - transformers
+    - sentencepiece
+    - prometheus-client

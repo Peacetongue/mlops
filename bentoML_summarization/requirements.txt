@@ -1,0 +1,5 @@
+torch>=2.0.0
+transformers>=4.30.0
+sentencepiece
+bentoml>=1.0.0
+prometheus-client

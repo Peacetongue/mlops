@@ -1,2 +1,5 @@
 bentoml
-transformers
+tensorflow
+pillow
+scikit-learn
+tf2onnx

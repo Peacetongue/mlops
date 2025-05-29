@@ -1,30 +1,38 @@
 import bentoml
 from bentoml.io import Image, JSON
+from bentoml.models import BentoModel
 import numpy as np
 from PIL import Image as PILImage
-
-model_ref = bentoml.keras.get("cifar10_cnn:latest")
-model_runner = model_ref.to_runner()
-
-svc = bentoml.Service("cifar10_classifier", runners=[model_runner])
+import onnxruntime as ort
 
 class_names = [
     "airplane", "automobile", "bird", "cat", "deer",
     "dog", "frog", "horse", "ship", "truck"
 ]
 
-@svc.api(input=Image(), output=JSON())
-async def classify(input_image: PILImage.Image):
-    image = input_image.resize((32, 32)).convert("RGB")
-    image_array = np.array(image).astype("float32") / 255.0
-    image_array = np.expand_dims(image_array, axis=0)
+@bentoml.service(
+    resources={"gpu": True},
+    traffic={"timeout": 60}
+)
+class Cifar10Service:
+    model_ref = BentoModel("cifar10_onnx_model:latest")
 
-    prediction = await model_runner.async_run(image_array)
-    predicted_class = int(np.argmax(prediction))
-    class_name = class_names[predicted_class]
+    def __init__(self):
+        self.session = ort.InferenceSession(self.model_ref.path_of("saved_model.onnx"))
+        self.input_name = self.session.get_inputs()[0].name
 
-    return {
-        "predicted_class_id": predicted_class,
-        "class_name": class_name,
-        "confidence": float(np.max(prediction))
-    }
+    @bentoml.api
+    def classify(self, image: PILImage.Image):
+        img = image.resize((32, 32)).convert("RGB")
+        arr = np.array(img).astype("float32") / 255.0
+        arr = np.expand_dims(arr, axis=0)
+
+        output = self.session.run(None, {self.input_name: arr})[0]
+        class_id = int(np.argmax(output))
+        confidence = float(np.max(output))
+
+        return {
+            "class_id": class_id,
+            "class_name": class_names[class_id],
+            "confidence": confidence
+        }

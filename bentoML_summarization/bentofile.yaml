@@ -4,6 +4,8 @@ labels:
   project: summarization
 include:
   - "*.py"
+models:
+  - cifar10_onnx_model:latest
 python:
   packages:
     - torch
@@ -13,4 +15,5 @@ python:
     - numpy
     - pillow
     - onnxruntime
+    - onnx
   lock_packages: true

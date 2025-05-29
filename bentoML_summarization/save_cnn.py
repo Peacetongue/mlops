@@ -3,7 +3,6 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization, Input
-import bentoml
 
 print(tf.config.list_physical_devices('GPU'))
 

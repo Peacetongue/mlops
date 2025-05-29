@@ -31,7 +31,7 @@ if response.status_code == 200:
 else:
     print(f"Ошибка сервиса: {response.status_code} — {response.text}")
 
-# 3. Сравнение
+
 print("\nСравнение результатов:")
 print("Совпадают ли тексты?", local_result.strip() == remote_result.strip())
 print("Разница во времени (сек):", abs(local_time - remote_time))

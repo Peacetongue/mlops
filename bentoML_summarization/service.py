@@ -1,11 +1,21 @@
+import base64
+from io import BytesIO
 import bentoml
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 from prometheus_client import Counter, Histogram
 import time
-from bentoml.models import BentoModel
-import onnxruntime as ort
 import numpy as np
-from PIL import Image as PILImage
+from PIL import Image
+from bentoml.io import JSON
+from pydantic import BaseModel
+
+
+class ImageInput(BaseModel):
+    image: str
+
+classify_input = JSON(pydantic_model=ImageInput)
+classify_output = JSON()
+
 
 class_names = [
     "airplane", "automobile", "bird", "cat", "deer",
@@ -23,7 +33,7 @@ inference_time_histogram = Histogram(
     name='inference_time_seconds',
     documentation='Time taken for summarization inference',
     labelnames=['status'],
-    buckets=(0.1, 0.2, 0.5, 1, 2, 5, 10, float('inf'))  # Example buckets
+    buckets=(0.1, 0.2, 0.5, 1, 2, 5, 10, float('inf'))
 )
 
 
@@ -32,20 +42,23 @@ inference_time_histogram = Histogram(
     traffic={"timeout": 60},
 )
 class SummarizationService:
-    cnn_model_ref = BentoModel("cifar10_onnx_model:latest")
-
     def __init__(self):
-        self.cnn_session = ort.InferenceSession(self.cnn_model_ref.path_of("saved_model.onnx"))
+        self.model_ref = bentoml.onnx.get("cifar10_onnx_model:latest")
+        self.cnn_session = self.model_ref.to_runner().model
         self.cnn_input_name = self.cnn_session.get_inputs()[0].name
+        self.model_name = "cointegrated/rut5-base-absum"
         self.tokenizer = T5Tokenizer.from_pretrained(self.model_name)
         self.model = T5ForConditionalGeneration.from_pretrained(self.model_name)
 
     @bentoml.api
-    def classify(self, image: PILImage.Image):
+    def classify(self, image: str):
         start_time = time.time()
+        status = "success"
 
         try:
-            img = image.resize((32, 32)).convert("RGB")
+            img_bytes = base64.b64decode(image)
+            img = Image.open(BytesIO(img_bytes)).resize((32, 32)).convert("RGB")
+
             arr = np.array(img).astype("float32") / 255.0
             arr = np.expand_dims(arr, axis=0)
 
@@ -53,23 +66,20 @@ class SummarizationService:
             class_id = int(np.argmax(output))
             confidence = float(np.max(output))
 
-            status = 'success'
-
-            classifier_text = {
+            return {
                 "class_id": class_id,
                 "class_name": class_names[class_id],
                 "confidence": confidence
             }
 
         except Exception as e:
-            classifier_text = str(e)
-            status = 'failure'
+            status = "failure"
+            return {"error": str(e)}
 
         finally:
-            inference_time_histogram.labels(status=status).observe(time.time() - start_time)
             request_counter.labels(status=status).inc()
+            inference_time_histogram.labels(status=status).observe(time.time() - start_time)
 
-        return classifier_text
 
     @bentoml.api
     def summarize(self, text: str, max_length: int = 100) -> str:

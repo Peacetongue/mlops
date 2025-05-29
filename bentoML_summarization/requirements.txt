@@ -3,3 +3,7 @@ transformers>=4.30.0
 sentencepiece
 bentoml>=1.0.0
 prometheus-client
+pillow
+scikit-learn
+tf2onnx
+onnxruntime

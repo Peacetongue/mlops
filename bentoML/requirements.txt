@@ -1,5 +1,0 @@
-bentoml
-tensorflow
-pillow
-scikit-learn
-tf2onnx

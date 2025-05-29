@@ -1,6 +1,6 @@
 service: "service:SummarizationService"
 labels:
-  owner: your-name
+  owner: Egor
   project: summarization
 include:
   - "*.py"
@@ -10,3 +10,7 @@ python:
     - transformers
     - sentencepiece
     - prometheus-client
+    - numpy
+    - pillow
+    - onnxruntime
+  lock_packages: true
